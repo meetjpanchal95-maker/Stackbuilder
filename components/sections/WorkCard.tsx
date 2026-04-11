@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useAnimation, easeInOut } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -16,16 +16,23 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeInOut } },
 };
 
+export function WorkCard({ number, title, subtitle, image, videoIndex }: WorkCardProps) {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
-  const [hovered, setHovered] = React.useState(false);
-  const [playingMobile, setPlayingMobile] = React.useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [playingMobile, setPlayingMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Simple mobile detection (touch devices)
-  const isMobile = typeof window !== 'undefined' && (
-    'ontouchstart' in window || navigator.maxTouchPoints > 0
-  );
+  // Detect mobile only on client
+  useEffect(() => {
+    setMounted(true);
+    const mobile = typeof window !== 'undefined' && (
+      'ontouchstart' in window || navigator.maxTouchPoints > 0
+    );
+    setIsMobile(mobile);
+  }, []);
 
   useEffect(() => {
     if (inView) {
@@ -37,6 +44,7 @@ const cardVariants = {
 
   // Desktop: Play video on hover. Mobile: Play on tap.
   useEffect(() => {
+    if (!mounted) return;
     const video = videoRef.current;
     if (!video) return;
     if (isMobile) {
@@ -64,7 +72,7 @@ const cardVariants = {
         video.currentTime = 0;
       }
     }
-  }, [hovered, playingMobile, isMobile]);
+  }, [hovered, playingMobile, isMobile, mounted]);
 
   return (
     <motion.div
@@ -89,9 +97,9 @@ const cardVariants = {
         transform: 'scale(0.8)',
         transformOrigin: 'top left',
       }}
-      onMouseEnter={() => { if (!isMobile) setHovered(true); }}
-      onMouseLeave={() => { if (!isMobile) setHovered(false); }}
-      onClick={() => { if (isMobile) setPlayingMobile((p) => !p); }}
+      onMouseEnter={() => { if (mounted && !isMobile) setHovered(true); }}
+      onMouseLeave={() => { if (mounted && !isMobile) setHovered(false); }}
+      onClick={() => { if (mounted && isMobile) setPlayingMobile((p) => !p); }}
     >
       <div
         className="workcard-image-wrap"
@@ -118,11 +126,11 @@ const cardVariants = {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: isMobile ? (playingMobile ? 1 : 0) : (hovered ? 1 : 0),
-            pointerEvents: isMobile ? 'auto' : 'none',
+            opacity: mounted ? (isMobile ? (playingMobile ? 1 : 0) : (hovered ? 1 : 0)) : 0,
+            pointerEvents: mounted ? (isMobile ? 'auto' : 'none') : 'none',
             transition: 'opacity 0.1s',
           }}
-          autoPlay={isMobile ? playingMobile : hovered}
+          autoPlay={mounted ? (isMobile ? playingMobile : hovered) : false}
           loop
           muted
           playsInline
