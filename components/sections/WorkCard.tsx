@@ -1,13 +1,14 @@
 "use client";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { motion, useAnimation, easeInOut } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 interface WorkCardProps {
+  number: string;
   title: string;
   subtitle: string;
-  description: string;
   image?: string;
+  videoIndex?: number;
 }
 
 const cardVariants = {
@@ -15,17 +16,39 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeInOut } },
 };
 
-export function WorkCard({ title, subtitle, description, image }: WorkCardProps) {
+export function WorkCard({ number, title, subtitle, image, videoIndex }: WorkCardProps) {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
+  const [hovered, setHovered] = React.useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (inView) {
       controls.start("visible");
     } else {
       controls.start("hidden");
     }
   }, [controls, inView]);
+
+  // Play video only on hover, pause otherwise, but only if video is loaded and ready
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (hovered) {
+      // Only play if can play
+      const playVideo = () => {
+        video.play().catch(() => {});
+      };
+      if (video.readyState >= 2) {
+        playVideo();
+      } else {
+        video.addEventListener('canplay', playVideo, { once: true });
+      }
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, [hovered]);
 
   return (
     <motion.div
@@ -34,77 +57,152 @@ export function WorkCard({ title, subtitle, description, image }: WorkCardProps)
       animate={controls}
       variants={cardVariants}
       style={{
-        background: "rgba(29, 111, 170, 0.07)",
+        background: 'transparent',
         borderRadius: 0,
         boxShadow: "none",
         border: "none",
-        padding: "2.2rem 2.2rem 1.7rem 2.2rem",
+        padding: 0,
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-        gap: "1.2rem",
+        gap: 0,
         minWidth: 0,
-        width: "100%",
-        maxWidth: "none",
+        width: 'fit-content',
+        height: 'fit-content',
+        maxWidth: 'none',
+        transform: 'scale(0.8)',
+        transformOrigin: 'top left',
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <div
+        className="workcard-image-wrap"
         style={{
           width: "100%",
-          aspectRatio: "16/7",
+          aspectRatio: "16/9",
           background: "var(--secondary-brand)",
           borderRadius: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
+          position: 'relative',
         }}
       >
-        {/* Placeholder image */}
-        {image ? (
-          <img src={image} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        ) : (
-          <span style={{ color: "var(--background-main)", fontSize: "1.2rem", fontFamily: 'Satoshi, var(--font-body)' }}>
+        {/* Video absolutely fills the container, always 16:9 */}
+        <video
+          ref={videoRef}
+          src={videoIndex ? `/workthumbs/${videoIndex}video.mp4` : undefined}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: hovered ? 1 : 0,
+            pointerEvents: 'none',
+            transition: 'opacity 0.1s',
+          }}
+          autoPlay={hovered}
+          loop
+          muted
+          playsInline
+          preload="auto"
+        />
+        {/* Image is always rendered, but hidden on hover */}
+        <img
+          src={image}
+          alt={title}
+          className="workcard-image"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: hovered ? 0 : 1,
+            transition: 'opacity 0.1s',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        />
+        {/* Fallback text if no image */}
+        {!image && !hovered && (
+          <span style={{ color: "var(--background-main)", fontSize: "1.2rem", fontFamily: 'Satoshi, var(--font-body)', position: 'relative', zIndex: 2 }}>
             IMAGE
           </span>
         )}
       </div>
-      <div>
+      <div style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        marginTop: '20px',
+      }}>
         <div
           style={{
-            fontFamily: 'Satoshi, var(--font-body)',
+            fontFamily: 'var(--font-satoshi)',
             fontWeight: 700,
-            fontSize: "1.25rem",
-            letterSpacing: "0.04em",
-            color: "var(--brand-color)",
-            marginBottom: "0.3rem",
+            fontSize: "2.8rem",
+            letterSpacing: "-0.06em",
             textTransform: "uppercase",
+            color: hovered ? 'var(--brand-color)' : "color-mix(in srgb, var(--brand-color) 70%, var(--foreground) 30%)",
+            opacity: hovered ? 1 : 0.22,
+            marginBottom: "0.6rem",
+            lineHeight: 0.9,
+            textAlign: "right",
+            width: "100%",
+            transition: 'color 0.2s, opacity 0.2s',
           }}
         >
-          {title}
+          {number}
+        </div>
+        <div
+          className="workcard-title"
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 400,
+            fontSize: "1.5rem",
+            letterSpacing: "0.01em",
+            lineHeight: 1.1,
+            textTransform: "uppercase",
+            color: "var(--foreground)",
+            marginBottom: "0.6rem",
+            textAlign: "right",
+            width: "100%",
+            opacity: hovered ? 1 : 0,
+            transition: 'opacity 0.2s',
+            height: '1.7em',
+            overflow: 'hidden',
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+        >
+          {hovered ? title : ''}
         </div>
         <div
           style={{
             fontFamily: 'Satoshi, var(--font-body)',
-            fontWeight: 400,
-            fontSize: "1rem",
-            color: "var(--subtitles)",
-            marginBottom: "0.5rem",
+            fontWeight: 500,
+            fontSize: "1.1rem",
+            color: "var(--brand-color)",
+            opacity: hovered ? 0.85 : 0,
+            marginBottom: "0.6rem",
+            marginTop: '-1.25rem', // Bring subtitle up by 20px
+            textAlign: "right",
+            textTransform: "none",
+            width: "100%",
+            height: '1.5em',
+            overflow: 'hidden',
+            transition: 'opacity 0.2s',
+            pointerEvents: 'none',
+            userSelect: 'none',
           }}
         >
-          {subtitle}
+          {hovered ? subtitle : ''}
         </div>
-        <div
-          style={{
-            fontFamily: 'Satoshi, var(--font-body)',
-            fontWeight: 400,
-            fontSize: "0.98rem",
-            color: "var(--text-invert)",
-            opacity: 0.88,
-          }}
-        >
-          {description}
-        </div>
+        {/* Description removed as requested */}
       </div>
     </motion.div>
   );

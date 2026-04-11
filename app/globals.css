@@ -1,3 +1,15 @@
+/* Force modal button row to always be visible and above overlays */
+.modal-video-buttons-fixed {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  top: 1.25rem !important;
+  left: 0 !important;
+  width: 100vw !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  pointer-events: auto !important;
+}
 .card-section-panel {
   display: flex;
   min-width: 0;

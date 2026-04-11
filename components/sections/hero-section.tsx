@@ -103,11 +103,16 @@ export function HeroSection() {
     <section
       ref={sectionRef}
       data-eye-region
-      className="relative min-h-[72vh] overflow-hidden py-8 lg:min-h-[74vh] lg:py-10"
+      className={`relative min-h-[72vh] py-8 lg:min-h-[74vh] lg:py-10${showVideo ? '' : ' overflow-hidden'}`}
     >
+      {/* Mobile: Top hero text */}
+      <div className="block lg:hidden text-center mb-4 px-2">
+        <div className="text-2xl font-bold text-brand leading-tight">You Imagine<br />We Create</div>
+        <div className="text-base font-medium text-foreground/90 mt-1">We help businesses<br />create digital experiences</div>
+      </div>
       {/* SVG background moved to HomePage for global effect */}
       <div className="relative z-10 flex min-h-[72vh] items-center justify-center px-[var(--site-gutter)] lg:min-h-[74vh]">
-        {/* Left text */}
+        {/* Left text (desktop only) */}
         <motion.div
           initial={{
             x: '50vw',
@@ -134,7 +139,7 @@ export function HeroSection() {
           You Imagine<br />We Create
         </motion.div>
         {/* Eye element */}
-        <div className="relative mx-auto flex aspect-square w-full max-w-[min(42rem,calc(100vw-3rem))] -translate-y-[8.25rem] items-center justify-center overflow-hidden sm:max-w-[min(44rem,calc(100vw-4rem))] sm:-translate-y-[9.5rem] lg:max-w-[46rem] lg:-translate-y-[10.75rem]">
+        <div className="hero-eye-container relative mx-auto flex aspect-square w-full max-w-[min(42rem,calc(100vw-3rem))] -translate-y-[8.25rem] items-center justify-center overflow-hidden sm:max-w-[min(44rem,calc(100vw-4rem))] sm:-translate-y-[9.5rem] lg:max-w-[46rem] lg:-translate-y-[10.75rem]">
           <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,_color-mix(in_srgb,var(--brand-color)_12%,transparent)_0%,transparent_60%)] blur-3xl" />
           <button
             type="button"
@@ -149,51 +154,58 @@ export function HeroSection() {
           <HeroEyeCanvas />
         </div>
       {showVideo && (
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
-          style={{ animation: 'fadeIn 0.2s' }}
-        >
+        <>
+          {/* Button row is fixed at top center of viewport for all screen sizes */}
           <div
-            className="relative bg-black rounded-xl shadow-2xl flex flex-col items-center justify-center p-4 max-w-full"
-              style={{ width: 'min(96vw, 756px)', height: 'min(96vh, 476px)' }}
+            className="modal-video-buttons-fixed"
+          >
+            <button
+              onClick={() => setVideoMuted((m) => !m)}
+              aria-label={videoMuted ? "Unmute video" : "Mute video"}
+              className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow border border-black/10 transition-colors duration-200"
+              style={{ border: 'none' }}
+            >
+              {videoMuted ? (
+                // Muted icon (crossed speaker)
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              ) : (
+                // Unmuted icon (speaker)
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 12c0-2.21-1.79-4-4-4"/><path d="M15 12c0-1.1-.9-2-2-2"/><path d="M19 12c0 2.21-1.79 4-4 4"/></svg>
+              )}
+            </button>
+            <button
+              onClick={() => setShowVideo(false)}
+              aria-label="Close video"
+              className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow border border-black/10 transition-colors duration-200"
+              style={{ border: 'none' }}
+            >
+              ×
+            </button>
+          </div>
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+            style={{ animation: 'fadeIn 0.2s', overflow: 'visible' }}
           >
             <div
-              className="absolute z-[10001] flex gap-3 justify-center w-full"
-              style={{ top: '16px', left: 0 }}
+              className="relative bg-black rounded-xl shadow-2xl flex flex-col items-center justify-center p-4 max-w-full"
+              style={{
+                width: 'min(96vw, 756px)',
+                height: 'min(96vh, 476px)',
+                minHeight: '320px',
+                overflow: 'visible',
+              }}
             >
-              <button
-                onClick={() => setVideoMuted((m) => !m)}
-                aria-label={videoMuted ? "Unmute video" : "Mute video"}
-                className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow border border-black/10 transition-colors duration-200"
-                style={{ border: 'none' }}
-              >
-                {videoMuted ? (
-                  // Muted icon (crossed speaker)
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                ) : (
-                  // Unmuted icon (speaker)
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 12c0-2.21-1.79-4-4-4"/><path d="M15 12c0-1.1-.9-2-2-2"/><path d="M19 12c0 2.21-1.79 4-4 4"/></svg>
-                )}
-              </button>
-              <button
-                onClick={() => setShowVideo(false)}
-                aria-label="Close video"
-                className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow border border-black/10 transition-colors duration-200"
-                style={{ border: 'none' }}
-              >
-                ×
-              </button>
+              <video
+                src="/stackvideo.mp4"
+                controls
+                autoPlay
+                loop
+                muted={videoMuted}
+                style={{ width: '100%', height: '100%', borderRadius: '1rem', background: '#000', objectFit: 'contain', display: 'block' }}
+              />
             </div>
-            <video
-              src="/stackvideo.mp4"
-              controls
-              autoPlay
-              loop
-              muted={videoMuted}
-              style={{ width: '100%', height: '100%', borderRadius: '1rem', background: '#000', objectFit: 'contain', display: 'block' }}
-            />
           </div>
-        </div>
+        </>
       )}
         {/* Right text */}
         <motion.div
@@ -224,7 +236,7 @@ export function HeroSection() {
       </div>
 
       <div className="pointer-events-none absolute right-0 bottom-[calc(var(--site-gutter)+10.75rem)] left-0 z-0 flex flex-col gap-3 overflow-hidden sm:bottom-[calc(var(--site-gutter)+11.25rem)] lg:bottom-[calc(var(--site-gutter)+11.75rem)]">
-        <div ref={wordmarkWrapRef} className="overflow-hidden">
+        <div ref={wordmarkWrapRef} className="overflow-hidden w-full">
           <h1
             ref={wordmarkRef}
             className="hero-wordmark hero-wordmark-spread"
@@ -259,6 +271,31 @@ export function HeroSection() {
         </div>
       </div>
       <style jsx>{`
+        @media (max-width: 640px) {
+          .hero-eye-container {
+            max-width: min(65.5rem, calc(100vw - 0.5rem)) !important;
+            aspect-ratio: 1 / 1 !important;
+            transform: scale(1.2);
+          }
+          .hero-wordmark {
+            font-size: clamp(1.2rem, 10vw, 2.2rem) !important;
+            width: 100% !important;
+            padding: 0;
+            text-align: center;
+            justify-content: center;
+            align-items: center !important;
+            margin: 0 auto !important;
+            letter-spacing: 0.04em;
+            display: flex !important;
+          }
+          .hero-wordmark-spread {
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 0.12em;
+            width: 100% !important;
+            margin: 0 auto !important;
+          }
+        }
         .hero-wordmark {
           --hero-wordmark-base-size: 9.75rem;
           --hero-wordmark-fit-scale: 1;

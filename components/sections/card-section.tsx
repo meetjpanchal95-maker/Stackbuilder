@@ -2,57 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { cn } from "@/lib/utils";
-
-const cardSectionItems = [
-  {
-    number: "01",
-    title: "Vision & Discovery",
-    secondaryTitle: "We dig into where you are before touching anything. Audits, competitor mapping, user journeys we build the full picture so every decision after this has a reason behind it.",
-    titleLines: ["Vision", "& Discovery"],
-    secondaryTitleLines: ["// Vision", "& Discovery"],
-    details: ["Initial audits, user journeys, and positioning alignment."],
-  },
-  {
-    number: "02",
-    title: "Brand & Strategy",
-    secondaryTitle: "Your story needs to work before your product does. We shape the narrative, define the messaging system, and frame how you show up so everything downstream feels intentional and consistent.",
-    titleLines: ["Brand", "& Strategy"],
-    secondaryTitleLines: ["// Brand", "& Strategy"],
-    details: ["Narrative systems, messaging direction, and rollout framing."],
-  },
-  {
-    number: "03",
-    title: "Experience Design",
-    secondaryTitle: "Good design is invisible until it isn't. We research how your users actually think, then build interfaces that feel obvious to them from early wireframes through to a full living design system.",
-    titleLines: ["Experience", "Design"],
-    secondaryTitleLines: ["// Experience", "Design"],
-    details: [
-      "Design engaging, scalable, and user-centric interfaces.",
-      "Includes UX research, wireframes, UI design, and design systems.",
-    ],
-  },
-  {
-    number: "04",
-    title: "Technology Architecture",
-    secondaryTitle: "Before writing a line of code, we map the whole thing. Systems, integrations, data flows we plan the structure so what gets built can actually grow without falling apart six months in.",
-    details: ["System planning, integration mapping, and scalable delivery structure."],
-  },
-  {
-    number: "05",
-    title: "Product Development",
-    secondaryTitle: "We build in loops, not waterfalls. Starting from a working prototype, we move fast toward production shipping real web products and apps that are tested, stable, and ready to be used.",
-    details: ["Web products, apps, and shipping loops from prototype to production."],
-  },
-  {
-    number: "06",
-    title: "Launch & Growth",
-    secondaryTitle: "Shipping is the beginning, not the finish line. We track what matters, cut what doesn't, and keep optimising turning your launch into a compound loop that gets better the longer it runs.",
-    titleLines: ["Launch", "& Growth"],
-    secondaryTitleLines: ["// Launch", "& Growth"],
-    details: ["Analytics, optimization, and ongoing performance expansion."],
-  },
-];
+import { cardSectionItems } from "./card-section-data";
 
 function renderTitleCopy(lines: string[] | undefined, fallback: string) {
   if (!lines?.length) {
@@ -130,33 +80,103 @@ export function CardSection() {
                   <span className="card-corner-line right" />
                 </>
               )}
-              <div className="card-section-body" style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%'}}>
-                <div style={{marginTop: 'auto', paddingBottom: '0.5rem', minHeight: '10.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
-                  {/* Subtitle above number, only for hovered card */}
+              <div className="card-section-body" style={{position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%'}}>
+                {/* Show image above text only for hovered card, ensure image is above text using z-index */}
+                {/* Desktop: image above text. Mobile: image after all text. */}
+                {hoveredIndex === idx && (
+                  <>
+                    {/* Desktop image (absolute, above text) */}
+                    <div
+                      className="card-section-image-wrap left-align card-section-image-desktop"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        zIndex: 2,
+                        pointerEvents: 'none',
+                        background: 'none',
+                        justifyContent: 'flex-start',
+                        display: 'flex',
+                      }}
+                    >
+                      <img
+                        src={`/cardimages/${idx + 1}.png`}
+                        alt={`Card visual ${idx + 1}`}
+                        className="card-section-image enlarged"
+                        style={{ width: 'auto', maxWidth: '108%', height: 'auto', display: 'block', marginLeft: 0, background: 'none' }}
+                      />
+                    </div>
+                    {/* Mobile image (static, after text) */}
+                    <div
+                      className="card-section-image-wrap left-align card-section-image-mobile"
+                      style={{
+                        width: '100%',
+                        background: 'none',
+                        justifyContent: 'flex-start',
+                        display: 'none',
+                        marginTop: '1.2rem',
+                      }}
+                    >
+                      <img
+                        src={`/cardimages/${idx + 1}.png`}
+                        alt={`Card visual ${idx + 1}`}
+                        className="card-section-image enlarged"
+                        style={{ width: 'auto', maxWidth: '108%', height: 'auto', display: 'block', marginLeft: 0, background: 'none' }}
+                      />
+                    </div>
+                  </>
+                )}
+                <div
+                  style={{
+                    marginTop: 'auto',
+                    paddingBottom: '0.5rem',
+                    minHeight: '10.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    position: 'relative',
+                    zIndex: 1,
+                    transform: hoveredIndex === idx ? 'translateY(20px)' : undefined,
+                    transition: 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
+                  }}
+                >
+                  {/* Subtitle: on mobile, show below title; on desktop, show above number */}
                   {hoveredIndex === idx && item.secondaryTitle && (
-                    <div className="card-section-subtitle" style={{color: 'var(--brand-color)', fontSize: '1.1rem', fontWeight: 500, marginBottom: '0.5em', opacity: 0.85, textAlign: 'right', textTransform: 'none'}}>
+                    <div className="card-section-subtitle left-align card-section-subtitle-desktop"
+                      style={{color: 'var(--brand-color)', fontSize: '1.1rem', fontWeight: 500, marginBottom: '0.5em', opacity: 0.85, textAlign: 'left', textTransform: 'none'}}>
                       {item.secondaryTitle}
                     </div>
                   )}
-                  <div className="card-section-number" style={{fontSize: '5rem', fontWeight: 600, opacity: 0.22, marginBottom: '0.5rem', color: 'var(--brand-color)', textAlign: 'right'}}>{item.number}</div>
-                  <div style={{color: 'var(--foreground)', fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 400, letterSpacing: '0.01em', lineHeight: 1.1, textTransform: 'uppercase', textAlign: 'right'}}>
-                    {/* Hide titles of non-hovered cards when a card is hovered */}
-                    {hoveredIndex !== null && hoveredIndex !== idx ? null : (
-                      item.number === '04' ? (
-                        [
-                          <div key="0">TECHNOLOGY</div>,
-                          <div key="1">ARCHITECTURE</div>
-                        ]
-                      ) : item.number === '05' ? (
-                        [
-                          <div key="0">PRODUCT</div>,
-                          <div key="1">DEVELOPMENT</div>
-                        ]
-                      ) : (
-                        item.titleLines ? item.titleLines.map((line, i) => (
-                          <div key={i}>{line.toUpperCase()}</div>
-                        )) : item.title.toUpperCase()
-                      )
+                  <div
+                    className="card-section-number text-[5rem] font-semibold opacity-22 mb-2 text-right"
+                    style={{ color: 'var(--brand-color)' }}
+                  >
+                    {item.number}
+                  </div>
+                  <div
+                    className="card-section-title text-[var(--foreground)] font-heading text-[1.5rem] font-normal tracking-[0.01em] leading-[1.1] uppercase text-right block"
+                  >
+                    {item.number === '04' ? (
+                      [
+                        <div key="0">TECHNOLOGY</div>,
+                        <div key="1">ARCHITECTURE</div>
+                      ]
+                    ) : item.number === '05' ? (
+                      [
+                        <div key="0">PRODUCT</div>,
+                        <div key="1">DEVELOPMENT</div>
+                      ]
+                    ) : (
+                      item.titleLines ? item.titleLines.map((line, i) => (
+                        <div key={i}>{line.toUpperCase()}</div>
+                      )) : item.title.toUpperCase()
+                    )}
+                    {/* Subtitle below title on mobile, only in hover state */}
+                    {hoveredIndex === idx && item.secondaryTitle && (
+                      <div className="card-section-subtitle right-align card-section-subtitle-mobile text-[var(--brand-color)] text-[1.1rem] font-medium mb-2 opacity-85 text-right normal-case">
+                        {item.secondaryTitle}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -166,6 +186,54 @@ export function CardSection() {
         })}
       </div>
       <style jsx>{`
+        /* Desktop: show image above text, hide on mobile */
+        .card-section-image-desktop { display: flex; }
+        @media (max-width: 640px) {
+          .card-section-image-desktop { display: none !important; }
+        }
+        /* Mobile: show image after text, hide on desktop */
+        .card-section-image-mobile { display: none; }
+        @media (max-width: 640px) {
+          .card-section-image-mobile { display: flex !important; }
+        }
+        /* Desktop: show subtitle above number, hide on mobile */
+        .card-section-subtitle-desktop { display: block; }
+        @media (max-width: 640px) {
+          .card-section-subtitle-desktop { display: none !important; }
+        }
+        /* Mobile: show subtitle below title, hide on desktop */
+        .card-section-subtitle-mobile { display: none; }
+        @media (max-width: 640px) {
+          .card-section-subtitle-mobile { display: block !important; }
+        }
+        .card-section-image-wrap {
+          width: 100%;
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          margin-bottom: 0.7rem;
+          background: none;
+        }
+        .card-section-image-wrap.left-align {
+          justify-content: flex-start;
+        }
+        .card-section-image {
+          max-width: 108%;
+          max-height: 192px;
+          height: auto;
+          width: auto;
+          object-fit: contain;
+          border-radius: 0;
+          box-shadow: 0 2px 16px 0 rgba(0,0,0,0.07);
+          background: none;
+          transition: max-width 0.2s, max-height 0.2s, border-radius 0.2s;
+        }
+        .card-section-image.enlarged {
+          max-width: 108%;
+          max-height: 192px;
+          border-radius: 0;
+          background: none;
+        }
                                 @media (max-width: 640px) {
                                   .card-section-subtitle {
                                     display: -webkit-box;
@@ -183,7 +251,13 @@ export function CardSection() {
                                     display: box;
                                     box-orient: vertical;
                                   }
+                                  .card-section-subtitle.right-align {
+                                    text-align: right !important;
+                                  }
                                 }
+                .card-section-subtitle.left-align {
+                  text-align: left !important;
+                }
                         @media (max-width: 640px) {
                           .card-section-track {
                             flex-direction: column;
@@ -194,10 +268,10 @@ export function CardSection() {
                           .card-section-panel {
                             width: 100% !important;
                             min-width: 0 !important;
-                            min-height: 260px !important;
+                            min-height: 420px !important;
                             height: auto !important;
                             padding: 2rem 1.2rem 1.5rem 1.2rem;
-                            border-radius: 1.2rem;
+                            border-radius: 0 !important;
                             border-left: 2px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
                             border-right: 2px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
                             border-top: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
@@ -208,6 +282,11 @@ export function CardSection() {
                             display: flex;
                             flex-direction: column;
                             justify-content: flex-end;
+                            transition: min-height 0.3s;
+                          }
+                          .card-section-panel.is-hovered {
+                            min-height: 520px !important;
+                            border-radius: 0 !important;
                           }
                           .card-section-panel:last-child {
                             margin-bottom: 0;
@@ -235,6 +314,9 @@ export function CardSection() {
                             flex-direction: column;
                             justify-content: flex-end;
                             height: 100%;
+                          }
+                          .card-section-image-wrap.left-align {
+                            justify-content: center !important;
                           }
                           .card-corner-line {
                             display: none !important;

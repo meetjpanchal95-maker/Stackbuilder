@@ -1,5 +1,6 @@
 import { CardTile } from "@/components/shared/card-tile";
 import { CardSection } from "@/components/sections/card-section";
+import WorkSection from "@/components/sections/worksection";
 import { HeroSection } from "@/components/sections/hero-section";
 import { SectionWrapper } from "@/components/sections/section-wrapper";
 import { playgroundProjects } from "@/content/playground";
@@ -51,62 +52,17 @@ export default function HomePage() {
       <div className="space-y-12 relative z-10">
         <HeroSection />
         <CardSection />
-        <div className="flex justify-end">
+         <div className="flex justify-end">
+          <ClickForMoreButton />
+        </div>
+        <WorkSection />
+        <div className="flex justify-end" style={{ marginTop: '-90px' }}>
           <ClickForMoreButton />
         </div>
 
-        <SectionWrapper
-          id="work-preview"
-          title="Work Preview"
-          description="Placeholder project entries demonstrate the reusable listing and detail route pattern."
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            {workProjects.map((project) => (
-              <CardTile
-                key={project.slug}
-                href={`/work/${project.slug}`}
-                title={project.title}
-                description={project.summary}
-                meta={project.year}
-              />
-            ))}
-          </div>
-        </SectionWrapper>
-        <SectionWrapper
-          id="playground-preview"
-          title="Playground Preview"
-          description="Experiment routes follow the same content-driven conventions with lighter placeholder entries."
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            {playgroundProjects.map((project) => (
-              <CardTile
-                key={project.slug}
-                href={`/playground/${project.slug}`}
-                title={project.title}
-                description={project.summary}
-                meta={project.status}
-              />
-            ))}
-          </div>
-        </SectionWrapper>
+       
 
-        <SectionWrapper
-          id="thread-preview"
-          title="Thread Preview"
-          description="Article routes are category-aware and driven from a central content registry."
-        >
-          <div className="grid gap-4 md:grid-cols-3">
-            {threadArticles.map((article) => (
-              <CardTile
-                key={`${article.category}-${article.slug}`}
-                href={`/threads/${article.category}/${article.slug}`}
-                title={article.title}
-                description={article.summary}
-                meta={`${article.category} · ${article.readingTime}`}
-              />
-            ))}
-          </div>
-        </SectionWrapper>
+       
         
       </div>
     </div>
