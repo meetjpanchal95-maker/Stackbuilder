@@ -1,8 +1,93 @@
+.card-section-panel {
+  display: flex;
+  min-width: 0;
+  width: calc(100% / 6);
+  flex: 0 0 calc(100% / 6);
+  height: 31rem;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
+  border-bottom: none !important;
+  border-left: 1px solid color-mix(in srgb, var(--brand-color) 24%, transparent);
+  background: #ff1744;
+  padding: 1.5rem 1.1rem 1.25rem;
+  color: var(--foreground);
+  text-align: left;
+  appearance: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.card-section-panel.is-hovered {
+  background: var(--background-main) !important;
+}
+
+.card-section-panel.is-shrunk {
+  /* No hover effect */
+}
+
+.card-section-track {
+  --card-section-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --card-section-width-duration: 1080ms;
+  --card-section-shift-duration: 640ms;
+  --card-section-reveal-duration: 840ms;
+  position: relative;
+  display: flex;
+  gap: 0;
+  width: 100%;
+  align-items: stretch;
+  overflow: hidden;
+  border-top: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
+  background: var(--background-main);
+  box-sizing: border-box;
+}
+
+/* --- Fix horizontal lines and right fill for card stacks --- */
+.card-section-track::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: color-mix(in srgb, var(--brand-color) 24%, transparent);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.card-section-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--brand-color) 50%, transparent);
+  z-index: 11;
+  pointer-events: none;
+}
+
+.card-section-track::after {
+  /* already defined, ensure it sits above cards */
+  z-index: 12;
+}
+
+.card-section-track {
+  /* Ensure no gap between cards and right edge */
+  box-sizing: border-box;
+}
+
+.card-section-panel {
+  box-sizing: border-box;
+}
+/* --- End fix for horizontal lines and right fill --- */
+
 @import "tailwindcss";
 
 @font-face {
   font-family: "Satoshi";
-  src: url("https://cdn.fontshare.com/wf/TTX2Z3BF3P6Y5BQT3IV2VNOK6FL22KUT/7QYRJOI3JIMYHGY6CH7SOIFRQLZOLNJ6/KFIAZD4RUMEZIYV6FQ3T3GP5PDBDB6JY.woff2") format("woff2");
+  src: url("https://cdn.fontshare.com/wf/TTX2Z3BF3P6Y5BQT3IV2VNOK6FL22KUT/7QYRJOI3JIMYHGY6CH7SOIFRQLZOLNJ6/KFIAZD4RUMEZIYV6FQ3T3GP5PDBDBDB6JY.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -51,6 +136,9 @@
   --subtitles: #444444;
   --background-main: #e5e8ec;
 
+  --secondary-brand-rgb: 109, 141, 176;
+  --background-main-rgb: 229, 232, 236;
+
   --background: var(--background-main);
   --foreground: var(--text-invert);
   --surface: var(--background-main);
@@ -71,6 +159,9 @@
   --secondary-brand: #002c48;
   --subtitles: #d8d8d8;
   --background-main: #010a10;
+
+  --secondary-brand-rgb: 0, 44, 72;
+  --background-main-rgb: 1, 10, 16;
 
   --background: var(--background-main);
   --foreground: var(--text-invert);
@@ -200,25 +291,29 @@ h6 {
   --card-section-width-duration: 1080ms;
   --card-section-shift-duration: 640ms;
   --card-section-reveal-duration: 840ms;
+  position: relative;
   display: flex;
   gap: 0;
   width: 100%;
   align-items: stretch;
   overflow: hidden;
   border-top: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
+  border-bottom: none !important;
+  background: var(--background-main);
+  box-sizing: border-box;
 }
 
 .card-section-panel {
   display: flex;
   min-width: 0;
   width: calc(100% / 6);
-  flex: 1 1 0;
+  flex: 0 0 calc(100% / 6);
   height: 31rem;
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
+  border-bottom: none !important;
   border-left: 1px solid color-mix(in srgb, var(--brand-color) 24%, transparent);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--background-main) 86%, white 14%) 0%, color-mix(in srgb, var(--background-main) 92%, transparent) 100%),
@@ -228,9 +323,18 @@ h6 {
   text-align: left;
   appearance: none;
   cursor: pointer;
+  box-sizing: border-box;
   transition:
-    width var(--card-section-width-duration) var(--card-section-ease),
-    flex-basis var(--card-section-width-duration) var(--card-section-ease),
+    background-color 680ms var(--card-section-ease),
+    border-color 680ms var(--card-section-ease),
+    box-shadow 680ms var(--card-section-ease),
+    transform 680ms var(--card-section-ease);
+}
+
+.card-section-panel.smart-animate {
+  transition:
+    width 420ms var(--card-section-ease),
+    flex-basis 420ms var(--card-section-ease),
     background-color 680ms var(--card-section-ease),
     border-color 680ms var(--card-section-ease),
     box-shadow 680ms var(--card-section-ease),
@@ -238,15 +342,19 @@ h6 {
 }
 
 .card-section-panel:last-child {
-  border-right-color: color-mix(in srgb, var(--brand-color) 24%, transparent);
+  border-right: none !important;
 }
 
-.card-section-track[data-has-active="true"] .card-section-panel[data-active="false"] {
-  width: 12.6%;
-  flex: 0 0 12.6%;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--background-main) 94%, white 6%) 0%, color-mix(in srgb, var(--background-main) 98%, transparent) 100%),
-    linear-gradient(135deg, color-mix(in srgb, var(--brand-color) 6%, transparent) 0%, transparent 72%);
+.card-section-panel.is-hovered:last-child {
+  margin-right: 0 !important;
+}
+
+.card-section-panel.is-hovered:first-child {
+  margin-left: 0 !important;
+}
+
+.card-section-track {
+  overflow: hidden;
 }
 
 .card-section-panel[data-active="true"] {

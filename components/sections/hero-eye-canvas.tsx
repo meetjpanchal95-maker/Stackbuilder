@@ -129,15 +129,33 @@ export function HeroEyeCanvas() {
     irisGroup.scale.setScalar(1.3);
     frontGroup.add(irisGroup);
 
+    // --- VIDEO TEXTURE FOR IRIS (BLUE CIRCLE) ---
+    const video = document.createElement('video');
+    video.src = '/stackvideo.mp4';
+    video.crossOrigin = 'anonymous';
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.style.display = 'none';
+    video.setAttribute('preload', 'auto');
+    video.play();
+
+    const videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.format = THREE.RGBFormat;
+
     const iris = new THREE.Mesh(
       new THREE.SphereGeometry(0.94, 96, 96),
       new THREE.MeshPhysicalMaterial({
-        color: mixColor(colors.inner, "#000000", 0.18),
+        map: videoTexture,
         roughness: 0.28,
         metalness: 0.18,
         clearcoat: 1,
         clearcoatRoughness: 0.14,
         envMapIntensity: 1.18,
+        side: THREE.FrontSide, // Only show on front
       }),
     );
     iris.position.set(0, 0, 0.02);
