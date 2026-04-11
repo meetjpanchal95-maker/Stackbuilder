@@ -16,11 +16,16 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeInOut } },
 };
 
-export function WorkCard({ number, title, subtitle, image, videoIndex }: WorkCardProps) {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
   const [hovered, setHovered] = React.useState(false);
+  const [playingMobile, setPlayingMobile] = React.useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Simple mobile detection (touch devices)
+  const isMobile = typeof window !== 'undefined' && (
+    'ontouchstart' in window || navigator.maxTouchPoints > 0
+  );
 
   useEffect(() => {
     if (inView) {
@@ -30,25 +35,36 @@ export function WorkCard({ number, title, subtitle, image, videoIndex }: WorkCar
     }
   }, [controls, inView]);
 
-  // Play video only on hover, pause otherwise, but only if video is loaded and ready
+  // Desktop: Play video on hover. Mobile: Play on tap.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (hovered) {
-      // Only play if can play
-      const playVideo = () => {
-        video.play().catch(() => {});
-      };
-      if (video.readyState >= 2) {
-        playVideo();
+    if (isMobile) {
+      if (playingMobile) {
+        const playVideo = () => { video.play().catch(() => {}); };
+        if (video.readyState >= 2) {
+          playVideo();
+        } else {
+          video.addEventListener('canplay', playVideo, { once: true });
+        }
       } else {
-        video.addEventListener('canplay', playVideo, { once: true });
+        video.pause();
+        video.currentTime = 0;
       }
     } else {
-      video.pause();
-      video.currentTime = 0;
+      if (hovered) {
+        const playVideo = () => { video.play().catch(() => {}); };
+        if (video.readyState >= 2) {
+          playVideo();
+        } else {
+          video.addEventListener('canplay', playVideo, { once: true });
+        }
+      } else {
+        video.pause();
+        video.currentTime = 0;
+      }
     }
-  }, [hovered]);
+  }, [hovered, playingMobile, isMobile]);
 
   return (
     <motion.div
@@ -73,8 +89,9 @@ export function WorkCard({ number, title, subtitle, image, videoIndex }: WorkCar
         transform: 'scale(0.8)',
         transformOrigin: 'top left',
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => { if (!isMobile) setHovered(true); }}
+      onMouseLeave={() => { if (!isMobile) setHovered(false); }}
+      onClick={() => { if (isMobile) setPlayingMobile((p) => !p); }}
     >
       <div
         className="workcard-image-wrap"
@@ -101,11 +118,11 @@ export function WorkCard({ number, title, subtitle, image, videoIndex }: WorkCar
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: hovered ? 1 : 0,
-            pointerEvents: 'none',
+            opacity: isMobile ? (playingMobile ? 1 : 0) : (hovered ? 1 : 0),
+            pointerEvents: isMobile ? 'auto' : 'none',
             transition: 'opacity 0.1s',
           }}
-          autoPlay={hovered}
+          autoPlay={isMobile ? playingMobile : hovered}
           loop
           muted
           playsInline
