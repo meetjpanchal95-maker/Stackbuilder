@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { useInView } from "../hooks/useInView";
 
@@ -155,33 +156,34 @@ export function HeroSection() {
         </div>
       {showVideo && (
         <>
-          {/* Button row is fixed at top center of viewport for all screen sizes */}
-          <div
-            className="modal-video-buttons-fixed"
-          >
-            <button
-              onClick={() => setVideoMuted((m) => !m)}
-              aria-label={videoMuted ? "Unmute video" : "Mute video"}
-              className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow border border-black/10 transition-colors duration-200"
-              style={{ border: 'none' }}
-            >
-              {videoMuted ? (
-                // Muted icon (crossed speaker)
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-              ) : (
-                // Unmuted icon (speaker)
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 12c0-2.21-1.79-4-4-4"/><path d="M15 12c0-1.1-.9-2-2-2"/><path d="M19 12c0 2.21-1.79 4-4 4"/></svg>
-              )}
-            </button>
-            <button
-              onClick={() => setShowVideo(false)}
-              aria-label="Close video"
-              className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow border border-black/10 transition-colors duration-200"
-              style={{ border: 'none' }}
-            >
-              ×
-            </button>
-          </div>
+          {/* Button row is fixed at top center of viewport for all screen sizes, portaled to body */}
+          {typeof window !== "undefined" && createPortal(
+            <div className="modal-video-buttons-fixed">
+              <button
+                onClick={() => setVideoMuted((m) => !m)}
+                aria-label={videoMuted ? "Unmute video" : "Mute video"}
+                className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow border border-black/10 transition-colors duration-200"
+                style={{ border: 'none' }}
+              >
+                {videoMuted ? (
+                  // Muted icon (crossed speaker)
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                ) : (
+                  // Unmuted icon (speaker)
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 12c0-2.21-1.79-4-4-4"/><path d="M15 12c0-1.1-.9-2-2-2"/><path d="M19 12c0 2.21-1.79 4-4 4"/></svg>
+                )}
+              </button>
+              <button
+                onClick={() => setShowVideo(false)}
+                aria-label="Close video"
+                className="bg-white/80 hover:bg-red-100 text-black rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow border border-black/10 transition-colors duration-200"
+                style={{ border: 'none' }}
+              >
+                ×
+              </button>
+            </div>,
+            window.document.body
+          )}
           <div
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
             style={{ animation: 'fadeIn 0.2s', overflow: 'visible' }}

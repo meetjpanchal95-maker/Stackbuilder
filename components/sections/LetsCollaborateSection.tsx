@@ -44,7 +44,7 @@ export default function LetsCollaborateSection() {
       {/* PNG grid background removed; now applied to section */}
       {/* Main content */}
       <div className="relative z-0 flex flex-col items-center w-full max-w-4xl px-4">
-        <h2 className="text-5xl font-heading text-center mb-4 mt-2">LET’S COLLABORATE</h2>
+        <h2 className="text-5xl font-heading text-center mb-4 mt-2 text-brand">LET’S COLLABORATE</h2>
         <p className="text-lg text-center mb-8 max-w-2xl">
           By leveraging integrated stacks, we empower businesses to build scalable, innovative solutions that drive impactful results.
         </p>

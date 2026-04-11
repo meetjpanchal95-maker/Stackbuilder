@@ -1,6 +1,7 @@
 import { CardTile } from "@/components/shared/card-tile";
 import { CardSection } from "@/components/sections/card-section";
 import WorkSection from "@/components/sections/worksection";
+import LetsCollaborateSection from "@/components/sections/LetsCollaborateSection";
 import { HeroSection } from "@/components/sections/hero-section";
 import { SectionWrapper } from "@/components/sections/section-wrapper";
 import { playgroundProjects } from "@/content/playground";
@@ -18,7 +19,20 @@ export const metadata = buildStaticPageMetadata({
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen">
+    <>
+      {/* Prevent white flash on dark mode: set [data-theme=dark] early if user prefers dark */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+              }
+            } catch(e) {}
+          `,
+        }}
+      />
+      <div className="relative min-h-screen">
       {/* Fixed SVG background */}
       <div
         aria-hidden="true"
@@ -60,11 +74,14 @@ export default function HomePage() {
           <ClickForMoreButton />
         </div>
 
+        <LetsCollaborateSection />
+        
        
 
        
         
       </div>
     </div>
+    </>
   );
 }

@@ -32,19 +32,22 @@ export function CardSection() {
         </p>
       </div>
 
-      <div className="card-section-track relative mt-10 lg:mt-14">
+      <div className="card-section-track relative mt-10 lg:mt-14" style={{ border: 'none' }}>
         {cardSectionItems.map((item, idx) => {
           let panelClass = "card-section-panel smart-animate";
           let style: React.CSSProperties = {};
           const total = cardSectionItems.length;
-          // Border fix: match left border for first card, right border only for last card
+          // Border fix: match left border for first card, right border only for last card (no bottom border)
           if (idx === 0) {
             style.borderLeft = '2px solid color-mix(in srgb, var(--brand-color) 50%, transparent)';
             style.borderRight = '2px solid color-mix(in srgb, var(--brand-color) 50%, transparent)';
+            // No bottom border
           } else if (idx === total - 1) {
             style.borderRight = '2px solid color-mix(in srgb, var(--brand-color) 50%, transparent)';
+            // No bottom border
           } else {
             style.borderRight = '2px solid color-mix(in srgb, var(--brand-color) 50%, transparent)';
+            // No bottom border
           }
           if (hoveredIndex !== null) {
             if (hoveredIndex === idx) {
