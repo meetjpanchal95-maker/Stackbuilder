@@ -12,8 +12,8 @@ interface TitleBlockProps {
 export const TitleBlock: React.FC<TitleBlockProps> = ({ text, className = "" }) => {
   return (
     <div className={`title-block flex items-center gap-4 ${className}`}>
-      <span className="block h-12 w-[5px] bg-foreground/40" style={{ minWidth: 5 }} />
-      <span className="font-satoshi text-5xl font-medium text-invert tracking-tight">{text}</span>
+      <span className="block h-12 w-[3px]" style={{ minWidth: 3, background: 'currentColor' }} />
+      <span className="font-satoshi text-5xl font-medium text-invert tracking-tight" style={{ color: 'var(--foreground)' }}>{text}</span>
     </div>
   );
 };

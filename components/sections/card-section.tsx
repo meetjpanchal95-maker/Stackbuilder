@@ -25,7 +25,7 @@ export function CardSection() {
   return (
     <section className="card-section relative -mt-[300px] overflow-hidden py-14 lg:py-20">
       <div className="relative mx-auto max-w-5xl text-center">
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight text-brand sm:text-4xl">We offer IT Services</h2>
+        <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl" style={{ color: 'var(--brand-color)' }}>We offer IT Services</h2>
         <p className="mx-auto mt-4 max-w-4xl text-balance text-sm leading-7 text-foreground/88 sm:text-base">
           We are pioneer in building STACKS and provide end to end IT solutions powered by intelligence,
           technology, and creativity for tomorrow&apos;s leaders.

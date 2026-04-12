@@ -1,3 +1,81 @@
+@media (max-width: 640px) {
+  .about-card-pos-2 .about-card-text p {
+    margin-top: 10px !important; /* 40 - 30 = 10 */
+  }
+}
+/* About section card layout and positioning */
+.about-section-cards-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: clamp(12px, 4vw, 48px);
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .about-section-cards-wrapper {
+    gap: clamp(8px, 3vw, 32px);
+  }
+}
+@media (max-width: 640px) {
+  .about-section-cards-wrapper {
+    flex-direction: column;
+    gap: 24px;
+    align-items: stretch;
+  }
+}
+/* Left, center, right alignment for cards */
+.about-card-pos-0 {
+  align-self: flex-start;
+}
+.about-card-pos-1 {
+  align-self: center;
+}
+.about-card-pos-2 {
+  align-self: flex-end;
+}
+/* Keep card aspect ratio and shape consistent */
+.about-card-responsive {
+  aspect-ratio: 3/4;
+  min-width: 0;
+  width: 100%;
+  max-width: 420px;
+  flex: 1 1 0;
+}
+/* Responsive card height and layout for About section cards (fixes hydration mismatch) */
+.about-card-responsive {
+  background: var(--surface);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  min-width: 0;
+  min-height: 416px;
+  aspect-ratio: 3/4;
+  max-width: 420px;
+  width: 100%;
+  padding: 0;
+  font-family: var(--font-family, inherit);
+  color: var(--foreground);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+@media (max-width: 640px) {
+  .about-card-responsive {
+    min-height: 499px; /* 416 * 1.2 = 499.2 */
+  }
+}
+/* Responsive card height for About section (fixes hydration mismatch) */
+.about-card-responsive {
+  min-height: 416px;
+}
+@media (max-width: 640px) {
+  .about-card-responsive {
+    min-height: 582px; /* 416 * 1.4 = 582.4 */
+  }
+}
 /* Force modal button row to always be visible and above overlays */
 .modal-video-buttons-fixed {
   position: fixed !important;
@@ -36,6 +114,10 @@
   transition: font-size 600ms cubic-bezier(0.11, 0.82, 0.39, 0.92), opacity 300ms ease;
 }
 
+.theme-toggle-btn:hover {
+  border-color: var(--brand-color) !important;
+  color: var(--brand-color) !important;
+}
 
 @media (max-width: 767px) {
   .card-section-number {
@@ -52,7 +134,12 @@
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
-  background: #ff1744;
+  border-right: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
+  border-bottom: none !important;
+  border-left: 1px solid color-mix(in srgb, var(--brand-color) 24%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--background-main) 86%, white 14%) 0%, color-mix(in srgb, var(--background-main) 92%, transparent) 100%),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-color) 10%, transparent) 0%, transparent 72%);
   padding: 1.5rem 1.1rem 1.25rem;
   color: var(--foreground);
   text-align: left;
@@ -66,8 +153,15 @@
     transform 680ms var(--card-section-ease);
 }
 
+
 .card-section-panel.is-hovered {
   background: var(--background-main) !important;
+}
+
+/* Card number in brand color on hover */
+.card-section-panel.is-hovered .card-section-number {
+  color: var(--brand-color) !important;
+  opacity: 1 !important;
 }
 
 
@@ -84,6 +178,8 @@
   width: 100%;
   align-items: stretch;
   overflow: hidden;
+  border-top: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--brand-color) 50%, transparent);
   background: var(--background-main);
   box-sizing: border-box;
 }
@@ -206,10 +302,49 @@ h6 {
   font-style: normal;
 }
 
+
 .site-header-link {
   font-family: var(--font-satoshi);
   font-weight: 400;
   font-style: normal;
+  position: relative;
+  color: var(--muted);
+  z-index: 1;
+  overflow: visible;
+  transition: color 0.2s;
+}
+
+/* Hover state: text brand color */
+.site-header-link:hover,
+.site-header-link.hover\:brand-hover:hover {
+  color: var(--brand-color);
+}
+
+/* Active state: background fill and text color */
+.site-header-link.active-menu {
+  color: var(--text-invert);
+}
+.site-header-link.active-menu .menu-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--brand-color);
+  border-radius: 0.375rem;
+  z-index: -1;
+  opacity: 1;
+  transition: background 0.2s;
+}
+
+/* Animate background fill on active */
+.site-header-link .menu-bg {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, background 0.2s;
+}
+.site-header-link.active-menu .menu-bg {
+  opacity: 1;
 }
 
 .hero-wordmark {
@@ -672,4 +807,12 @@ select {
 ::selection {
   background: var(--brand-color);
   color: var(--text-invert);
+}
+
+/* LetsCollaborateSection SVG background switching for light/dark mode */
+.lets-collab-svg-bg-light { display: none; }
+.lets-collab-svg-bg-dark { display: block; }
+@media (prefers-color-scheme: light) {
+  .lets-collab-svg-bg-light { display: block; }
+  .lets-collab-svg-bg-dark { display: none; }
 }

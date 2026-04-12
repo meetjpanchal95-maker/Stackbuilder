@@ -108,8 +108,20 @@ export function HeroSection() {
     >
       {/* Mobile: Top hero text */}
       <div className="block lg:hidden text-center mb-4 px-2">
-        <div className="text-2xl font-bold text-brand leading-tight">You Imagine<br />We Create</div>
-        <div className="text-base font-medium text-foreground/90 mt-1">We help businesses<br />create digital experiences</div>
+        <div className="text-2xl font-bold leading-tight">
+          <span style={{ color: 'var(--text-invert)' }}>You </span>
+          <span style={{ color: 'var(--brand-color)' }}>Imagine</span>
+          <br />
+          <span style={{ color: 'var(--text-invert)' }}>We </span>
+          <span style={{ color: 'var(--brand-color)' }}>Create</span>
+        </div>
+        <div className="text-base font-medium mt-1">
+          <span style={{ color: 'var(--text-invert)' }}>We help </span>
+          <span style={{ color: 'var(--brand-color)' }}>businesses</span>
+          <br />
+          <span style={{ color: 'var(--text-invert)' }}>create </span>
+          <span style={{ color: 'var(--brand-color)' }}>digital experiences</span>
+        </div>
       </div>
       {/* SVG background moved to HomePage for global effect */}
       <div className="relative z-10 flex min-h-[72vh] items-center justify-center px-[var(--site-gutter)] lg:min-h-[74vh]">
@@ -135,9 +147,13 @@ export function HeroSection() {
               }
           }
           style={{ perspective: 800 }}
-          className="absolute left-0 top-[25%] -translate-y-1/2 z-20 max-w-xs text-left text-3xl font-bold text-brand hidden lg:block"
+          className="absolute left-0 top-[25%] -translate-y-1/2 z-20 max-w-xs text-left text-3xl font-bold hidden lg:block"
         >
-          You Imagine<br />We Create
+          <span style={{ color: 'var(--text-invert)' }}>You </span>
+          <span style={{ color: 'var(--brand-color)' }}>Imagine</span>
+          <br />
+          <span style={{ color: 'var(--text-invert)' }}>We </span>
+          <span style={{ color: 'var(--brand-color)' }}>Create</span>
         </motion.div>
         {/* Eye element */}
         <div className="hero-eye-container relative mx-auto flex aspect-square w-full max-w-[min(42rem,calc(100vw-3rem))] -translate-y-[8.25rem] items-center justify-center overflow-hidden sm:max-w-[min(44rem,calc(100vw-4rem))] sm:-translate-y-[9.5rem] lg:max-w-[46rem] lg:-translate-y-[10.75rem]">
@@ -231,9 +247,13 @@ export function HeroSection() {
               }
           }
           style={{ perspective: 800 }}
-          className="absolute right-0 top-[25%] -translate-y-1/2 z-20 max-w-xs text-right text-lg font-medium text-foreground/90 hidden lg:block"
+          className="absolute right-0 top-[25%] -translate-y-1/2 z-20 max-w-xs text-right text-lg font-medium hidden lg:block"
         >
-          We help businesses<br />create digital experiences
+          <span style={{ color: 'var(--text-invert)' }}>We help </span>
+          <span style={{ color: 'var(--brand-color)' }}>businesses</span>
+          <br />
+          <span style={{ color: 'var(--text-invert)' }}>create </span>
+          <span style={{ color: 'var(--brand-color)' }}>digital experiences</span>
         </motion.div>
       </div>
 
@@ -255,18 +275,18 @@ export function HeroSection() {
             ))}
           </h1>
         </div>
-
-        <div className="border-t border-border/40 backdrop-blur-sm">
-          <div className="overflow-hidden">
-            <div className="offerings-ticker-track py-4">
-              {[0, 1].map((copyIndex) => (
-                <div key={copyIndex} className="offerings-ticker-group" aria-hidden={copyIndex === 1}>
-                  {offerings.map((item) => (
-                    <span key={`${copyIndex}-${item}`} className="offerings-ticker-item">
-                      {item}
-                    </span>
-                  ))}
-                </div>
+        {/* Offerings ticker restored below the wordmark */}
+        <div className="w-full border-t border-[color:var(--brand-color)]/40 mt-2 mb-1" style={{ minHeight: 32, position: 'relative', overflow: 'hidden' }}>
+          <div className="offerings-ticker-track" style={{ minHeight: 32 }}>
+            <div className="offerings-ticker-group">
+              {offerings.map((offering, idx) => (
+                <span className="offerings-ticker-item" key={offering + idx}>{offering}</span>
+              ))}
+            </div>
+            {/* Duplicate for seamless loop */}
+            <div className="offerings-ticker-group">
+              {offerings.map((offering, idx) => (
+                <span className="offerings-ticker-item" key={offering + '-dup-' + idx}>{offering}</span>
               ))}
             </div>
           </div>

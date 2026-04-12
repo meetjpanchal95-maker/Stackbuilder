@@ -2,6 +2,7 @@ import { CardTile } from "@/components/shared/card-tile";
 import { CardSection } from "@/components/sections/card-section";
 import WorkSection from "@/components/sections/worksection";
 import LetsCollaborateSection from "@/components/sections/LetsCollaborateSection";
+import AboutSection from "@/components/sections/AboutSection";
 import { HeroSection } from "@/components/sections/hero-section";
 import { SectionWrapper } from "@/components/sections/section-wrapper";
 import { playgroundProjects } from "@/content/playground";
@@ -75,6 +76,10 @@ export default function HomePage() {
         </div>
 
         <LetsCollaborateSection />
+        <AboutSection />
+         <div className="flex justify-end">
+          <ClickForMoreButton />
+        </div>
         
        
 
