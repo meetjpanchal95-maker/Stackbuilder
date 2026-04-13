@@ -1,3 +1,13 @@
+.insight-card img {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.insight-card:hover img {
+  transform: scale(0.95);
+}
+.insight-desc-invert {
+  color: var(--brand-color, #1d6faa);
+  opacity: 1;
+}
 @media (max-width: 640px) {
   .about-card-pos-2 .about-card-text p {
     margin-top: 10px !important; /* 40 - 30 = 10 */
@@ -815,4 +825,52 @@ select {
 @media (prefers-color-scheme: light) {
   .lets-collab-svg-bg-light { display: block; }
   .lets-collab-svg-bg-dark { display: none; }
+}
+
+/* Support manual theme switching via [data-theme] attribute */
+[data-theme="light"] .lets-collab-svg-bg-light { display: block; }
+[data-theme="light"] .lets-collab-svg-bg-dark { display: none; }
+[data-theme="dark"] .lets-collab-svg-bg-light { display: none; }
+[data-theme="dark"] .lets-collab-svg-bg-dark { display: block; }
+
+/* Insight Card Custom Styles - Use with global CSS variables for font and color */
+
+.insight-tag {
+  background: var(--secondary-brand, #002c48);
+  color: var(--foreground, #fff);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-satoshi, inherit);
+}
+
+.insight-date {
+  color: #B0B8C1;
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-family: var(--font-afacad, inherit);
+}
+
+
+.insight-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  color: var(--brand-color, #1d6faa);
+  font-family: var(--font-satoshi, inherit);
+}
+
+.insight-desc {
+  color: var(--text-invert, #010a10);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  font-family: var(--font-afacad, inherit);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s, max-height 0.3s;
+}
+.insight-card:hover .insight-desc {
+  opacity: 1;
+  max-height: 200px;
 }
